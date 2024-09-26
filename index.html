@@ -1,172 +1,141 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montu Hosting</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #111;
-            color: #00ffcc;
-            font-family: Arial, sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            border: 2px solid #00ffcc;
-            padding: 50px;
-            border-radius: 10px;
-            background-color: rgba(17, 17, 17, 0.8);
-            z-index: 2;
-        }
-        button {
-            background-color: #00ffcc;
-            border: none;
-            color: #111;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #00cc99;
-        }
-        #rulesModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 20px;
-            overflow: auto;
-            z-index: 10;
-        }
-        .modal-content {
-            background-color: #222;
-            padding: 20px;
-            border-radius: 10px;
-            margin: auto;
-            max-width: 600px;
-        }
-        .close {
-            background-color: red;
-            border: none;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            float: right;
-        }
-        #loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #00ffcc;
-            font-size: 24px;
-            display: none;
-        }
-        .profile {
-            position: absolute;
-            bottom: 20px;
-            text-align: center;
-            color: #fff;
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MontuHosting</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0d0d0d;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+
+    #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 2rem;
+    }
+
+    #loadingBar {
+      width: 80%;
+      background-color: #1a1a1a;
+      border: 1px solid #00ffcc;
+      position: relative;
+      margin-top: 20px;
+      height: 25px;
+    }
+
+    #loadingProgress {
+      background-color: #00ffcc;
+      height: 100%;
+      width: 0;
+    }
+
+    #fingerPrint {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .fingerIcon {
+      width: 100px;
+      height: 100px;
+      background-color: #1a1a1a;
+      border-radius: 50%;
+      border: 3px solid #00ffcc;
+      position: relative;
+    }
+
+    .fingerIcon::before {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px dashed #00ffcc;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    #message {
+      display: none;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    #passwordScreen {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #passwordInput {
+      padding: 10px;
+      border: 2px solid #00ffcc;
+      background-color: transparent;
+      color: #00ffcc;
+      font-size: 1.5rem;
+    }
+
+    #errorMessage {
+      display: none;
+      color: red;
+      margin-top: 20px;
+    }
+
+    #scanError {
+      display: none;
+      background-color: black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div id="loading">Loading... 1%</div>
-    <div class="container" style="display: none;">
-        <h1>Selamat Datang di Website Montu Hosting</h1>
-        <p>Silakan baca peraturan sebelum melanjutkan.</p>
-        <button id="loginButton">WEB LOGIN</button>
-        <button onclick="openModal()">Peraturan</button>
-        <button onclick="window.open('https://chat.whatsapp.com/IdlVgKsHb1I4WBGOrB68Zq')">GRUP INFO PANEL</button>
-    </div>
 
-    <div id="rulesModal">
-        <div class="modal-content">
-            <button class="close" onclick="closeModal()">×</button>
-            <h2>PERATURAN</h2>
-            <p>RULES*</p>
-            <ul>
-                <li>JANGAN DI PAKEK DDOS</li>
-                <li>JANGAN INTIP PANEL ORANG LAIN</li>
-                <li>BUAT PANEL / HOSTING UNLI DIKIT AJA</li>
-                <li>JANGAN BAGIKAN DOMAIN KE ORANG</li>
-                <li>WAJIB PATUNGAN 1 MINGGU 1x</li>
-                <li>JANGAN OTAK ATIK PANEL</li>
-                <li>JANGAN RUSUH</li>
-                <li>JANGAN CURI SC</li>
-                <li>POKONYA JANGAN RUSUH</li>
-                <li>JANGAN ASAL PENCET</li>
-                <li>BUAT PANEL UNTUK DI JUAL</li>
-                <li>PANEL JANGAN DI BAGI BAGIKAN SECARA FREE</li>
-                <li>BUAT TESTI SENSOR LINK WEB PANEL</li>
-                <li>JANGAN SHER LINK / PROMOSI</li>
-            </ul>
-            <p>( *LANGGAR GW KICK + DEL + SEMUA NO REFF* )</p>
-        </div>
-    </div>
+<div id="loadingScreen">
+  <div>Loading <span id="loadingPercent">1%</span></div>
+  <div id="loadingBar">
+    <div id="loadingProgress"></div>
+  </div>
+</div>
 
-    <div class="profile">
-        <p>Created by: Montu Hosting</p>
-    </div>
+<div id="fingerPrint">
+  <div>Letakkan Jempol Anda:</div>
+  <div class="fingerIcon" id="fingerIcon"></div>
+  <div id="message">Kamu bodoh, itu belum selesai!</div>
+</div>
 
-    <script>
-        function openModal() {
-            document.getElementById('rulesModal').style.display = 'block';
-        }
-        function closeModal() {
-            document.getElementById('rulesModal').style.display = 'none';
-        }
-        window.onload = function() {
-            var loadingText = document.getElementById('loading');
-            var container = document.querySelector('.container');
-            loadingText.style.display = 'block';
+<div id="passwordScreen">
+  <input type="password" id="passwordInput" placeholder="Masukkan Password">
+  <div id="errorMessage">Password salah!</div>
+</div>
 
-            let progress = 1;
-            const loadingInterval = setInterval(function() {
-                if (progress <= 100) {
-                    loadingText.textContent = 'Loading... ' + progress + '%';
-                    progress++;
-                } else {
-                    clearInterval(loadingInterval);
-                    loadingText.style.display = 'none';
-                    container.style.display = 'block';
-                    alert("Selamat datang di website Montu Hosting! Silakan baca peraturan.");
-                }
-            }, 200); // 20 detik total
-        };
+<div id="scanError"></div>
 
-        document.getElementById('loginButton').onclick = function() {
-            var loadingText = document.getElementById('loading');
-            loadingText.style.display = 'block';
-            let progress = 1;
-            const loadingInterval = setInterval(function() {
-                if (progress <= 100) {
-                    loadingText.textContent = 'Loading... ' + progress + '%';
-                    progress++;
-                } else {
-                    clearInterval(loadingInterval);
-                    loadingText.textContent = 'Sukses!';
-                    setTimeout(function() {
-                        window.location.href = 'https://montunetwork.kyeestore.my.id';
-                    }, 1000); // Redirect setelah 1 detik
-                }
-            }, 100); // 10 detik total
-        };
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
