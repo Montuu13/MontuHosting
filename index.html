@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MontuHosting</title>
+  <title>montu Hosting</title>
   <style>
     body {
       margin: 0;
@@ -58,6 +58,7 @@
       border-radius: 50%;
       border: 3px solid #00ffcc;
       position: relative;
+      cursor: pointer;
     }
 
     .fingerIcon::before {
@@ -75,10 +76,11 @@
       100% { transform: scale(1.5); opacity: 0; }
     }
 
-    #message {
+    #analyzingMessage {
       display: none;
       font-size: 1.5rem;
       margin-top: 20px;
+      color: #00ffcc;
     }
 
     #passwordScreen {
@@ -124,9 +126,9 @@
 </div>
 
 <div id="fingerPrint">
-  <div>Letakkan Jempol Anda:</div>
+  <div>Klik Jempol Anda untuk Melakukan Scan:</div>
   <div class="fingerIcon" id="fingerIcon"></div>
-  <div id="message">Kamu bodoh, itu belum selesai!</div>
+  <div id="analyzingMessage">Menganalisis data sidik jari...</div>
 </div>
 
 <div id="passwordScreen">
@@ -136,6 +138,64 @@
 
 <div id="scanError"></div>
 
-<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const loadingScreen = document.getElementById('loadingScreen');
+  const loadingProgress = document.getElementById('loadingProgress');
+  const loadingPercent = document.getElementById('loadingPercent');
+  const fingerPrint = document.getElementById('fingerPrint');
+  const fingerIcon = document.getElementById('fingerIcon');
+  const analyzingMessage = document.getElementById('analyzingMessage');
+  const passwordScreen = document.getElementById('passwordScreen');
+  const passwordInput = document.getElementById('passwordInput');
+  const errorMessage = document.getElementById('errorMessage');
+  const scanError = document.getElementById('scanError');
+
+  let loading = 1;
+
+  // Animasi Loading
+  const loadingInterval = setInterval(() => {
+    loading++;
+    loadingPercent.innerText = loading + '%';
+    loadingProgress.style.width = loading + '%';
+    if (loading >= 100) {
+      clearInterval(loadingInterval);
+      loadingScreen.style.display = 'none';
+      fingerPrint.style.display = 'flex';
+    }
+  }, 30);
+
+  // Klik untuk Analisis Sidik Jari
+  fingerIcon.addEventListener('click', function() {
+    analyzingMessage.style.display = 'block';
+    fingerIcon.style.pointerEvents = 'none'; // Disable klik setelah pertama kali
+    setTimeout(() => {
+      fingerPrint.style.display = 'none';
+      passwordScreen.style.display = 'flex';
+    }, 5000); // Animasi analisis selama 5 detik
+  });
+
+  // Validasi Password
+  passwordInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const password = passwordInput.value;
+      if (password === 'montu123') {
+        window.location.href = 'https://montunetwork.kyeestore.my.id'; // Ganti dengan link sebenarnya
+      } else {
+        errorMessage.style.display = 'block';
+        setTimeout(() => {
+          passwordScreen.style.display = 'none';
+          scanError.style.display = 'block';
+          setTimeout(() => {
+            scanError.style.display = 'none';
+            passwordScreen.style.display = 'flex';
+          }, 40000);
+        }, 1000);
+      }
+    }
+  });
+});
+</script>
+
 </body>
 </html>
